@@ -8,7 +8,7 @@ class Patient(models.Model):
     middle_name = models.CharField(max_length=50, null=True, blank=True)
     birth_date = models.DateField()
     iin_num = models.IntegerField(unique=True)
-    id_num = models.IntegerField(primary_key=True)
+    id_num = models.IntegerField(unique=True)
 
     bl_groups = [
         ('A', 'Group A'),
@@ -40,7 +40,7 @@ class Doctor(models.Model):
     birth_date = models.DateField()
     iin_num = models.IntegerField(unique=True)
     id_num = models.IntegerField(primary_key=True)
-    #dep_id
+    dep_id = models.IntegerField()
     spec_details_id = models.IntegerField(unique=True)
     experience = models.IntegerField()
     photo = models.ImageField()
