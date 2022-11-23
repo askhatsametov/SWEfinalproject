@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from hospital.models import *
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -37,4 +37,8 @@ def home(request):
     return render(request, 'hospital/home.html')
 
 def appoinment(request):
-    return render(request, 'hospital/appointment.html')
+    doctors = Doctor.objects.all()
+    return render(request, 'hospital/appointment.html', { 'doctors': doctors})
+
+def profile(request):
+    return render(request, 'hospital/profile.html');

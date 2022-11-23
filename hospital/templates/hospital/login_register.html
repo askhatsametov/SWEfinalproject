@@ -1,19 +1,29 @@
-{% extends 'main.html' %}
-
-{% block content %}
-
+{% extends 'main.html' %} {% load static %} {% block content %}
 <div>
-    <form method = "POST" action = "">
-        {% csrf_token %}
+  <form
+    method="POST"
+    action=""
+    style="
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      min-height: 100%;
+      padding: 20px;
+      gap: 1rem;
+    "
+  >
+    {% csrf_token %}
 
-        <label>Username:</label>
-        <input type = "text" name ="username" placeholder = "Enter Username" />
+    <label>Username:</label>
+    <input type="text" name="username" placeholder="Enter Username" />
 
-        <label>Password:</label>
-        <input type = "password" name = "password" placeholder = "Enter Password" />
+    <label>Password:</label>
+    <input type="password" name="password" placeholder="Enter Password" />
 
-        <input type = "submit" value = "Login" />
-    </form>
+    <button class="btn btn-primary">Login</button>
+  </form>
 </div>
 
 {% endblock content %}
