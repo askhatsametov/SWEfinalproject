@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -34,19 +36,27 @@ class Patient(models.Model):
     def __str__(self):
         return f"{self.user.first_name}, {self.user.last_name}"
 
+class Department(models.Model):
+    type = models.CharField(max_length=100, null=False)
+
+    def __str__(self):
+        return self.type
+
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='+')
     middle_name = models.CharField(max_length=50, null=True, blank=True)
     birth_date = models.DateField()
     iin_num = models.IntegerField(unique=True)
     id_num = models.IntegerField(primary_key=True)
-    dep_id = models.IntegerField()
     spec_details_id = models.IntegerField(unique=True)
     experience = models.IntegerField()
     photo = models.ImageField()
     category = models.CharField(max_length=100)
     price = models.IntegerField()
-    schedule = models.DateField()
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, default='')
+    #schedule = models.DateField()
+    start_hours = models.TimeField(default=datetime.time(8, 0, 0))
+    end_hours = models.TimeField(default=datetime.time(21, 0, 0))
 
     degrees = [
         ('ASD', 'Associate Degree'),
@@ -62,3 +72,23 @@ class Doctor(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name}, {self.user.last_name}"
+
+
+class Service(models.Model):
+    name = models.CharField(max_length=100, null=False)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class Appointment(models.Model):
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    time = models.TimeField()
+    day = models.DateField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['doctor_id', 'day', 'time'], name='unique_constraint_appointment')
+        ]

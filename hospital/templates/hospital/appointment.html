@@ -8,7 +8,8 @@
         <div class="well-title">
           <h2>Book an Appointment</h2>
         </div>
-        <form class="gap-3">
+        <form class="gap-3" method="POST">
+          {% csrf_token %}
           <!-- Form start -->
           <div class="row">
             <div class="col-md-6">
@@ -71,10 +72,9 @@
                   name="appointmentfor"
                   class="form-control"
                 >
-                  <option value="Service#1">MRI</option>
-                  <option value="Service#2">Ultrasound</option>
-                  <option value="Service#3">Appointment For</option>
-                  <option value="Service#4">Appointment For</option>
+                  {% for department in departments %}
+                  <option value="Service#1">{{department}}</option>
+                  {% endfor %}
                 </select>
               </div>
             </div>
@@ -86,8 +86,8 @@
                   >Appointment For</label
                 >
                 <select
-                  id="appointmentfor"
-                  name="appointmentfor"
+                  id="appointmentfordoctor"
+                  name="appointmentfordoctor"
                   class="form-control"
                 >
                   {% for doctor in doctors %}

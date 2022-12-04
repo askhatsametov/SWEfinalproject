@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from hospital.models import *
+from django.contrib.auth import get_user_model
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -37,8 +38,27 @@ def home(request):
     return render(request, 'hospital/home.html')
 
 def appoinment(request):
+    '''
+    if request.method =='POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+
+        User = get_user_model()
+        users = User.objects.filter(email=email)
+
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        doctor = request.POST.get('appointmentfordoctor')
+        appointment = Appointment()
+        appointment.doctor_id = Doctor.objects.get()
+        appointment.patient_id = Patient.objects.filter(user=users)
+        appointment.time = time
+        appointment.date = date
+
+    '''
     doctors = Doctor.objects.all()
-    return render(request, 'hospital/appointment.html', { 'doctors': doctors})
+    departments = Department.objects.all()
+    return render(request, 'hospital/appointment.html', { 'doctors': doctors, 'departments': departments})
 
 def profile(request):
     return render(request, 'hospital/profile.html');
