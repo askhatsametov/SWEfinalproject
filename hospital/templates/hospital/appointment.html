@@ -1,4 +1,12 @@
 {% extends 'main.html' %} {% block content %}
+<script>
+  document.getElementById('date').min =
+    new Date().getFullYear() +
+    '-' +
+    parseInt(new Date().getMonth() + 1) +
+    '-' +
+    new Date().getDate();
+</script>
 
 <hr />
 <div class="container">
@@ -8,7 +16,7 @@
         <div class="well-title">
           <h2>Book an Appointment</h2>
         </div>
-        <form class="gap-3" method="POST">
+        <form class="gap-3" method="POST" action="">
           {% csrf_token %}
           <!-- Form start -->
           <div class="row">
@@ -47,6 +55,7 @@
                   type="date"
                   placeholder="Preferred Date"
                   class="form-control input-md"
+                  min="2022-12-8"
                 />
               </div>
             </div>
@@ -73,7 +82,7 @@
                   class="form-control"
                 >
                   {% for department in departments %}
-                  <option value="Service#1">{{department}}</option>
+                  <option name="appointmentfor">{{department}}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -91,7 +100,7 @@
                   class="form-control"
                 >
                   {% for doctor in doctors %}
-                  <option value="Service#1">{{doctor}}</option>
+                  <option value="{{ doctor.pk }}">{{doctor}}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -129,12 +138,22 @@
             </div>
           </div>
           <div class="feature feature-blurb-text">
-            <h4 class="feature-title">Experienced Staff Available</h4>
+            <h4 class="feature-title">Your Appointments</h4>
             <div class="feature-content">
-              <p>
-                Aliquam sit amet mi eu libero fermentum bibendum pulvinar a
-                turpis. Vestibulum quis feugiat risus.
-              </p>
+              {% for appointment in appointments %}
+              <div class="card" style="width: 18rem">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    Appointment with {{appointment.doctor_id}}
+                  </h5>
+                  <p class="card-text">
+                    Your appointment is on {{appointment.day}} at
+                    {{appointment.time}}
+                  </p>
+                  <a href="#" class="btn btn-danger">Cancel Appointment</a>
+                </div>
+              </div>
+              {% endfor %}
             </div>
           </div>
           <div class="feature feature-blurb-text">
