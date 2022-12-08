@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from hospital.models import *
-from django.contrib.auth import get_user_model
+from datetime import datetime
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -38,27 +38,28 @@ def home(request):
     return render(request, 'hospital/home.html')
 
 def appoinment(request):
-    '''
+
+    doctors = Doctor.objects.all()
+    departments = Department.objects.all()
+    appointments = Appointment.objects.filter(patient_id=request.user.pk)
     if request.method =='POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
 
-        User = get_user_model()
-        users = User.objects.filter(email=email)
+        users = User.objects.get(email=email)
 
         date = request.POST.get('date')
-        time = request.POST.get('time')
-        doctor = request.POST.get('appointmentfordoctor')
-        appointment = Appointment()
-        appointment.doctor_id = Doctor.objects.get()
-        appointment.patient_id = Patient.objects.filter(user=users)
-        appointment.time = time
-        appointment.date = date
-
-    '''
-    doctors = Doctor.objects.all()
-    departments = Department.objects.all()
-    return render(request, 'hospital/appointment.html', { 'doctors': doctors, 'departments': departments})
+        timeLabel = request.POST.get('time').split(':')[0] + ':00:00'
+        time = datetime.strptime(timeLabel, '%H:%M:%S')
+        doctor = request.POST['appointmentfordoctor']
+        appointment = Appointment.objects.create(
+            doctor_id = Doctor.objects.get(pk=int(doctor)),
+            patient_id = Patient.objects.get(user__pk=users.pk),
+            time = time,
+            day = date
+        )
+        appointment.save()
+    return render(request, 'hospital/appointment.html', { 'doctors': doctors, 'departments': departments, 'appointments': appointments})
 
 def profile(request):
     return render(request, 'hospital/profile.html');
